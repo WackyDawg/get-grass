@@ -34,7 +34,7 @@ puppeteer.use(StealthPlugin());
             const randomUserAgent = shuffledUserAgents.pop(); 
 
             const browser = await puppeteer.launch({
-                headless: false,
+                headless: true,
                 args: [
                     '--no-sandbox', 
                     '--disable-setuid-sandbox', 
