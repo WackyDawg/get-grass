@@ -11,6 +11,9 @@ WORKDIR /usr/src/app
 # Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
 
+# Fix permissions
+RUN chown -R node:node /usr/src/app
+
 # Install dependencies using npm ci
 RUN npm install
 
