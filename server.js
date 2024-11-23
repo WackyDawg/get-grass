@@ -18,7 +18,7 @@ server.listen(4000, () => {
   setTimeout(() => {
     console.log('Starting the application after 10 minutes...');
     
-    exec('node multi-browser.js', (error, stdout, stderr) => {
+    exec('node chrome-browser.js', (error, stdout, stderr) => {
       if (error) {
         console.error(`Error executing node index.js: ${error.message}`);
         return;
