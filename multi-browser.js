@@ -92,7 +92,7 @@ async function ExtractCRX() {
             await page.setUserAgent(randomUserAgent);
             console.log(`Browser ${i + 1} launched with user agent: ${randomUserAgent}`);
 
-            await page.goto(`chrome-extension://${extensionId}/index.html`);
+            await page.goto(`chrome-extension://${extensionId}/index.html`, { waitUntil: 'networkidle0', timeout: 60000 });
             const title = await page.title();
             console.log(`Browser ${i + 1} visited: ${title}`);
 
