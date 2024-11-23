@@ -6,8 +6,8 @@ const path = require('path');
 const crx = require("crx-util");
 
 // Modules for downloading and extracting CRX files
-const { downloadCRXFile } = require('./modules/downloadCRX.module.js');
-const { ExtractCRX } = require('./modules/CRXExtractor.module.js');
+//const { downloadCRXFile } = require('./modules/downloadCRX.module.js');
+//const { ExtractCRX } = require('./modules/CRXExtractor.module.js');
 
 // Use Puppeteer Stealth
 puppeteer.use(StealthPlugin());
