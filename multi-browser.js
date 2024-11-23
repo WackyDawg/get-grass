@@ -48,7 +48,7 @@ async function ExtractCRX() {
 }
 
 (async () => {
-    const browserCount = 2;
+    const browserCount = 1;
     const tasks = [];
 
     const message = await downloadCRXFile(extensionId, extensionName);
