@@ -1,30 +1,70 @@
+// Import necessary libraries
 const puppeteer = require('puppeteer-extra');
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 const fs = require('fs');
 const path = require('path');
+const crx = require("crx-util");
+
+// Modules for downloading and extracting CRX files
 const { downloadCRXFile } = require('./modules/downloadCRX.module.js');
 const { ExtractCRX } = require('./modules/CRXExtractor.module.js');
 
 // Use Puppeteer Stealth
 puppeteer.use(StealthPlugin());
 
+// Define CRX download and extraction paths
+const extensionId = 'ilehaonighjijnmpnagapkhpcdbhclfg';
+const extensionName = 'grass-lite-node';
+const extractedName = 'grass-node';
+
+const extensionPath = path.resolve(__dirname, './');
+const crxPath = './grass-node.crx';
+const extractToPath = './';
+
+// User agent list for browser automation
+const userAgents = JSON.parse(fs.readFileSync('./user-agents.json', 'utf-8'));
+const shuffledUserAgents = [...userAgents].sort(() => Math.random() - 0.5);
+
+// Function to download CRX file
+async function downloadCRXFile(extensionId, extensionName) {
+    try {
+        await crx.downloadById(`${extensionId}`, "chrome", './grass-node.crx');
+        console.log('0% <===========================Downloading===========================> 100%');
+        console.log(`Downloaded ${extensionName} CRX file to ./extensions/grass-node.crx`);
+    } catch (error) {
+        throw new Error(`Failed to download CRX file: ${error.message}`);
+    }
+}
+
+// Function to extract CRX file
+async function ExtractCRX() {
+    try {
+        if (!fs.existsSync(crxPath)) {
+            console.error('Error: The CRX file does not exist.');
+            return;
+        }
+
+        if (!fs.existsSync(extractToPath)) {
+            fs.mkdirSync(extractToPath, { recursive: true });
+        }
+
+        crx.parser.extract(crxPath, extractToPath);
+        console.log('==>  0% ========================== Extracting ============================== 100%');
+        console.log('==> Extracted CRX Successfully to:', extractToPath);
+    } catch (error) {
+        console.error('Error during extraction:', error.message);
+    }
+}
+
+// Main script execution
 (async () => {
     const browserCount = 3;
-    const tasks = []; 
-    const extensionId = 'ilehaonighjijnmpnagapkhpcdbhclfg';
-    const extensionName = 'grass-lite-node';
-    const extractedName = 'grass-node';
-
-    const extensionPath = path.resolve(__dirname, './extensions/extracted/grass-node');
+    const tasks = [];
 
     const message = await downloadCRXFile(extensionId, extensionName);
     console.log(message);
 
-    const extractCRXFile = await ExtractCRX();
-    
-    const userAgents = JSON.parse(fs.readFileSync('./modules/user-agents.json', 'utf-8'));
-
-    const shuffledUserAgents = [...userAgents].sort(() => Math.random() - 0.5);
+    await ExtractCRX();
 
     for (let i = 0; i < browserCount; i++) {
         tasks.push((async () => {
@@ -36,8 +76,8 @@ puppeteer.use(StealthPlugin());
             const browser = await puppeteer.launch({
                 headless: true,
                 args: [
-                    '--no-sandbox', 
-                    '--disable-setuid-sandbox', 
+                    '--no-sandbox',
+                    '--disable-setuid-sandbox',
                     '--disable-dev-shm-usage',
                     `--disable-extensions-except=${extensionPath}`,
                     `--load-extension=${extensionPath}`
@@ -45,10 +85,10 @@ puppeteer.use(StealthPlugin());
                 defaultViewport: null,
                 ignoreHTTPSErrors: true,
             });
+
             const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
             const page = await browser.newPage();
-
             await page.setUserAgent(randomUserAgent);
             console.log(`Browser ${i + 1} launched with user agent: ${randomUserAgent}`);
 
@@ -70,7 +110,7 @@ puppeteer.use(StealthPlugin());
             await newPage.waitForSelector(CookieButtonSelector);
             await newPage.click(CookieButtonSelector);
 
-            await delay(10000); 
+            await delay(10000);
 
             // Enter Username and Password
             const usernameInputSelector = 'input[name="user"]';
@@ -83,15 +123,15 @@ puppeteer.use(StealthPlugin());
             await newPage.type(passwordInputSelector, 'Cro$$2005');
             await newPage.waitForSelector(loginButtonSelector);
             await newPage.click(loginButtonSelector);
-            console.log(`Logged in Succesfully Browser ${i + 1}.`);
+            console.log(`Logged in Successfully Browser ${i + 1}.`);
 
             try {
                 await newPage.waitForSelector(CookieButtonSelector);
                 await newPage.click(CookieButtonSelector);
             } catch (error) {
-                console.error(`Failed to close cookies in Browser ${i + 1}.`, error);       
+                console.error(`Failed to close cookies in Browser ${i + 1}.`, error);
             }
-            
+
             await page.bringToFront()
 
             // Close the browser if needed
