@@ -1,18 +1,12 @@
-// Import necessary libraries
 const puppeteer = require('puppeteer-extra');
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 const fs = require('fs');
 const path = require('path');
 const crx = require("crx-util");
 
-// Modules for downloading and extracting CRX files
-//const { downloadCRXFile } = require('./modules/downloadCRX.module.js');
-//const { ExtractCRX } = require('./modules/CRXExtractor.module.js');
-
 // Use Puppeteer Stealth
 puppeteer.use(StealthPlugin());
 
-// Define CRX download and extraction paths
 const extensionId = 'ilehaonighjijnmpnagapkhpcdbhclfg';
 const extensionName = 'grass-lite-node';
 const extractedName = 'grass-node';
@@ -21,11 +15,9 @@ const extensionPath = path.resolve(__dirname, './');
 const crxPath = './grass-node.crx';
 const extractToPath = './';
 
-// User agent list for browser automation
 const userAgents = JSON.parse(fs.readFileSync('./user-agents.json', 'utf-8'));
 const shuffledUserAgents = [...userAgents].sort(() => Math.random() - 0.5);
 
-// Function to download CRX file
 async function downloadCRXFile(extensionId, extensionName) {
     try {
         await crx.downloadById(`${extensionId}`, "chrome", './grass-node.crx');
@@ -36,7 +28,6 @@ async function downloadCRXFile(extensionId, extensionName) {
     }
 }
 
-// Function to extract CRX file
 async function ExtractCRX() {
     try {
         if (!fs.existsSync(crxPath)) {
@@ -56,9 +47,8 @@ async function ExtractCRX() {
     }
 }
 
-// Main script execution
 (async () => {
-    const browserCount = 1;
+    const browserCount = 2;
     const tasks = [];
 
     const message = await downloadCRXFile(extensionId, extensionName);
