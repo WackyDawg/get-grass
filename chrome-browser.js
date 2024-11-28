@@ -149,7 +149,7 @@ async function ExtractCRX() {
             const loginButtonSelector = '.chakra-button.css-b4gyfj';
 
             await newPage.waitForSelector(usernameInputSelector);
-            await newPage.type(usernameInputSelector, 'judenwadinobi@gmail.com');
+            await newPage.type(usernameInputSelector, 'juliannwadinobi098@gmail.com');
             await newPage.waitForSelector(passwordInputSelector);
             await newPage.type(passwordInputSelector, 'Cro$$2005');
             await newPage.waitForSelector(loginButtonSelector);
