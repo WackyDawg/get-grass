@@ -9,4 +9,4 @@ COPY package*.json ./
 RUN npm ci
 COPY . .
 
-CMD ["node", "chrome-browser.js"]
+CMD ["node", "server.js"]
